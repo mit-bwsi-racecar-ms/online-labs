@@ -1,1 +1,1 @@
-# BWSI Racecar Middle School - Official Labs
+# BWSI Racecar Middle School - Official Python and OpenCV Labs
