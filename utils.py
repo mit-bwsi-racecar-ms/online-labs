@@ -14,11 +14,17 @@ video_port = 0
 
 def show_inline(img):
     '''Displays an image inline.'''
-    b, g, r = cv2.split(img)
-    rgb_img = cv2.merge([r,g,b])
-    plt.imshow(rgb_img)
-    plt.xticks([]), plt.yticks([])
-    plt.show()
+    if (len(img.shape) == 3):
+        b, g, r = cv2.split(img)
+        rgb_img = cv2.merge([r,g,b])
+        plt.imshow(rgb_img)
+        plt.xticks([]), plt.yticks([])
+        plt.show()
+    else:
+        arr = np.asarray(img)
+        plt.imshow(arr, cmap='gray', vmin=0, vmax=255)
+        plt.xticks([]), plt.yticks([])
+        plt.show()
 
     
 def close_windows():
