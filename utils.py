@@ -262,7 +262,7 @@ def find_object(img, img_q, total_matches, MIN_MATCH_COUNT, kp_img, kp_frame, m,
         img = cv2.polylines(img,[np.int32(dst)], True, color ,3, cv2.LINE_AA)
         dst = None
     else:
-        print "Not enough matches are found - %d/%d" % (total_matches, MIN_MATCH_COUNT)
+        print("Not enough matches are found - %d/%d" % (total_matches, MIN_MATCH_COUNT))
         
 
 def draw_matches(img, frame, total_keypoints, matches, kp_img, kp_frame):
