@@ -25,7 +25,6 @@ def show_inline(img):
         plt.imshow(arr, cmap='gray', vmin=0, vmax=255)
         plt.xticks([]), plt.yticks([])
         plt.show()
-
     
 def close_windows():
     '''Close popup window via 'ESC' key.'''
@@ -45,6 +44,7 @@ def video(function):
         frame = video.read()[1]
         if frame is not None:
             #frame = cv2.resize(frame, (640,480))  # Uncomment this line if issues arise
+            frame = cv2.resize(frame, (640,480))
             function(frame)
     cv2.destroyAllWindows()
     cv2.waitKey(1)
@@ -101,14 +101,14 @@ def findGreatestContour(contours):
 def detectDrawings(img, color_range):
     img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(img_hsv, color_range[0], color_range[1])
-    _, contours, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(mask,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
     if contours is []:
         return img
     cnt = findGreatestContour(contours)
     
     x,y,w,h = cv2.boundingRect(cnt)
-    output = cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
-
+    cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+    '''
     for contour in contours:
         pt, r = cv2.minEnclosingCircle(cnt)
     
@@ -118,7 +118,8 @@ def detectDrawings(img, color_range):
         print(cv2.contourArea(box), cv2.contourArea(cnt))
     else:
         cv2.drawContours(img,[box],0,(0,0,255),2)
-    return img 
+    '''
+    return img, mask 
 
 
 #############################
@@ -261,8 +262,8 @@ def find_object(img, img_q, total_matches, MIN_MATCH_COUNT, kp_img, kp_frame, m,
         dst[:,:,0] += query_columns
         img = cv2.polylines(img,[np.int32(dst)], True, color ,3, cv2.LINE_AA)
         dst = None
-    else:
-        print ("Not enough matches are found - %d/%d" % (total_matches, MIN_MATCH_COUNT))
+    #else:
+        #print ("Not enough matches are found - %d/%d" % (total_matches, MIN_MATCH_COUNT))
         
 
 def draw_matches(img, frame, total_keypoints, matches, kp_img, kp_frame):
@@ -273,15 +274,20 @@ def draw_matches(img, frame, total_keypoints, matches, kp_img, kp_frame):
     total_matches = 0
     
     # Need to draw only good matches, so create a mask
-    matchesMask = [[0,0] for i in xrange(len(matches))]
+    matchesMask = [[0,0] for i in range(len(matches))]
 
     # store all the good matches as per Lowe's ratio test.
     good_matches = []
-    for i,(m,n) in enumerate(matches):
-        if m.distance < 0.7*n.distance:
-            matchesMask[i]=[1,0]
-            total_matches += 1
-            good_matches.append(m)
+    i = 0
+    m = []
+    for x in list(enumerate(matches)):
+        if len(x[1]) == 2:
+            if x[1][0].distance < 0.7*x[1][1].distance:
+                matchesMask[i]=[1,0]
+                total_matches += 1
+                good_matches.append(x[1][0])
+                m.append(x[1][0])
+        i += 1
      
     # Getting percentages and putting it on screen
     match_percent = round(total_matches/total_keypoints, 3)
