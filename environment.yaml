@@ -1,0 +1,10 @@
+name: bwsi
+channels:
+  - defaults
+dependencies:
+  - python
+  - matplotlib
+  - numpy
+  - jupyter
+  - opencv
+  - pip
