@@ -273,7 +273,7 @@ def draw_matches(img, frame, total_keypoints, matches, kp_img, kp_frame):
     total_matches = 0
 
     # Need to draw only good matches, so create a mask
-    matchesMask = [[0,0] for i in xrange(len(matches))]
+    matchesMask = [[0,0] for i in range(len(matches))]
 
     # store all the good matches as per Lowe's ratio test.
     good_matches = []
